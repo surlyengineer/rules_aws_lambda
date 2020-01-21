@@ -1,7 +1,18 @@
 
 def _lambda_python_pkg_impl(ctx):
     inputs = ctx.attr.src.default_runfiles.files.to_list()
-    dirs = ','.join([i.dirname for i in inputs if i.extension == 'py'])
+    extras = []
+    # This is clunky: some modules have inits at the root, some have a file
+    # named the same as the module.  In the latter case we need to import the
+    # more specific
+    for i in inputs:
+        if i.extension == 'py':
+            sans_ext =i.basename.split('.')[0]
+            if i.dirname.endswith(sans_ext):
+                extras.append('/'.join([i.dirname, sans_ext]))
+            else:
+                extras.append(i.dirname)
+    dirs = ','.join(extras)
     args = ctx.actions.args()
     args.add("-o", ctx.outputs.out.path)
     f = ctx.attr.main.files.to_list()[0]
