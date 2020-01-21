@@ -1,12 +1,13 @@
 
 def _lambda_python_pkg_impl(ctx):
     inputs = ctx.attr.src.default_runfiles.files.to_list()
+    dirs = ','.join([i.dirname for i in inputs if i.extension == 'py'])
     args = ctx.actions.args()
     args.add("-o", ctx.outputs.out.path)
     f = ctx.attr.main.files.to_list()[0]
     args.add("-e", f)
     strip_prefix = f.dirname
-    print(strip_prefix)
+    args.add("-D", dirs)
     args.add("-s", strip_prefix)
     args.add_all(inputs)
     ctx.actions.run(
