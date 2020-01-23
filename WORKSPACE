@@ -34,6 +34,13 @@ pip3_import(
 load("@protobuf_py_deps//:requirements.bzl", protobuf_pip_install = "pip_install")
 protobuf_pip_install()
 
+pip3_import(
+    name="example_py_deps",
+    requirements="//examples:requirements.txt"
+)
+load("@example_py_deps//:requirements.bzl", example_pip_install = "pip_install")
+example_pip_install()
+
 git_repository(
     name = "com_apt_itude_rules_pip",
     commit = "aafdefd2bf1a9f6995669c1d744da493de9a7b75",
@@ -49,7 +56,6 @@ load("@com_apt_itude_rules_pip//rules:repository.bzl", "pip_repository")
 pip_repository(
     name = "pip3",
     python_interpreter = "python3",
-    requirements = "//:requirements.txt",
+    requirements = "//examples:requirements.txt",
 )
-
 

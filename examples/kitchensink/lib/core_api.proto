@@ -1,0 +1,7 @@
+syntax = "proto3";
+package lib.core;
+
+message Person {
+  string id = 1;
+  string name = 2;
+}
